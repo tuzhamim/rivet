@@ -1,0 +1,8 @@
+.rivet-elementor-icon:after {
+    position: absolute;
+    content: 'Rivet';
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
+    opacity: .8;
+}
