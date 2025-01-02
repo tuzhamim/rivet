@@ -235,9 +235,9 @@ function rivet_scripts() {
 
 	wp_enqueue_script( 'nice-select', get_template_directory_uri() . '/assets/js/nice-select.min.js', array( 'jquery' ), RIVET_THEME_VERSION, true );
 
-	wp_enqueue_script( 'svg-inject', get_template_directory_uri() . '/assets/js/svg-inject.min.js', array( 'jquery' ), RIVET_THEME_VERSION, true );
-
+	
 	wp_enqueue_script( 'swiper-bundle', get_template_directory_uri() . '/assets/js/swiper-bundle.js', array( 'jquery' ), RIVET_THEME_VERSION, true );
+	
 
 	if ( ( function_exists( 'is_product' ) && is_product() ) ) :
 		wp_enqueue_style( 'rivet-slick', get_template_directory_uri() . '/assets/css/slick.min.css', array(), RIVET_THEME_VERSION );
@@ -252,6 +252,8 @@ function rivet_scripts() {
 	if ( rivet_set_value( 'smooth_scroll', false ) ) :
 		wp_enqueue_script( 'rivet-smooth-scroll', get_template_directory_uri() . '/assets/js/smooth-scroll.min.js', array(), RIVET_THEME_VERSION, true );
 	endif;
+
+	wp_enqueue_script( 'svg-inject', get_template_directory_uri() . '/assets/js/svg-inject.min.js', array( 'jquery' ), RIVET_THEME_VERSION, true );
 
 	wp_enqueue_script( 'rivet-init', get_template_directory_uri() . '/assets/js/init.js', array( 'jquery' ), RIVET_THEME_VERSION, true );
 }

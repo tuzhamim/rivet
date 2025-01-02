@@ -1,24 +1,25 @@
-<div class="rivet-testimonial-2__item">
-    <div class="rivet-testimonial-2__rating">
-        <span><img class="svgInject" src="<?php echo get_template_directory_uri(); ?>/assets/img/icon/star.svg" alt=""></span>
-        <span><img class="svgInject" src="<?php echo get_template_directory_uri(); ?>/assets/img/icon/star.svg" alt=""></span>
-        <span><img class="svgInject" src="<?php echo get_template_directory_uri(); ?>/assets/img/icon/star.svg" alt=""></span>
-        <span><img class="svgInject" src="<?php echo get_template_directory_uri(); ?>/assets/img/icon/star.svg" alt=""></span>
-        <span><img class="svgInject" src="<?php echo get_template_directory_uri(); ?>/assets/img/icon/star.svg" alt=""></span>
-    </div>
-    <div class="rivet-testimonial-2__content">
-        <p>“ Trusted partner for electrical excellence! Choosing for our electrical engineering needs was one of the best decisions we made to innovation.”</p>
-    </div>
-    <div class="rivet-testimonial-2__avater">
-        <div class="rivet-testimonial-2__avater-thumb">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/testimonial/thumbnail-2-1.png" alt="">
-        </div>
-        <div class="rivet-testimonial-2__avater-text">
-            <h5 class="rivet-testimonial-2__avater-title one-line-text">Willam Stephen</h5>
-            <span>Digital Marketer</span>
-        </div>
-    </div>
-    <div class="rivet-testimonial-2__shape">
-        <img class="svgInject" src="<?php echo get_template_directory_uri(); ?>/assets/img/testimonial/thumbnail-2-shape-1.svg" alt="">
-    </div>
-</div>
+<?php
+use \Elementor\Control_Media;
+
+echo '<div class="rivet-testimonial-2__item rivet-testimonial-card">';
+    echo '<div class="rivet-testimonial-2__rating">';
+        $this->rating( $testimonial['rating'] );
+    echo '</div>';
+    if( !empty( $testimonial['testimonial'] ) ) : 
+    echo '<div class="rivet-testimonial-2__content">';
+        echo '<p>“' . wp_kses_post( $testimonial['testimonial'] ) . '”</p>';
+    echo '</div>';
+    endif;
+    echo '<div class="rivet-testimonial-2__avater">';
+        if ( ! empty( $image_url ) ) :
+        echo '<div class="rivet-testimonial-2__avater-thumb">';
+            echo '<img src="' . esc_url( $image_url ) . '" alt="' . Control_Media::get_image_alt( $testimonial['thumb'] ) . '">';
+        echo '</div>';
+        endif;
+        echo '<div class="rivet-testimonial-2__avater-text">';
+            echo $testimonial['name'] ? '<h5 class="rivet-testimonial-2__avater-title one-line-text">' . esc_html( $testimonial['name'] ) . '</h5>' : '';
+            echo $testimonial['designation'] ? '<span>' . esc_html( $testimonial['designation'] ) . '</span>' : '';
+        echo '</div>';
+    echo '</div>';
+    $this->logo_print( $testimonial, true, 'rivet-testimonial-2__shape', false );
+echo '</div>';

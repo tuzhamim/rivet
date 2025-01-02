@@ -76,6 +76,7 @@ Template Name: Rivet - Construction & Building WordPress Theme
 	--rivet-theme-pasty: #F5F0EB;
 	--rivet-theme-purple: #755FFF;
 	--rivet-heading-secondary: #153000;
+	--rivet-theme-pasty: #F5F0EB;
 	--rivet-ff-heading: 'Figtree', sans-serif;
 	--rivet-ff-body: 'Figtree', sans-serif;
 }
@@ -91,6 +92,10 @@ Template Name: Rivet - Construction & Building WordPress Theme
 .bg-white {
     background-color: #fff !important;
 }
+
+.white-bg {
+	background-color: var(--rivet-common-white);
+  }
 
 .bg-secondary-color {
     background: var(--color-secondary) !important;

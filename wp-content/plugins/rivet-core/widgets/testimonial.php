@@ -6,11 +6,12 @@ use \Elementor\Group_Control_Image_Size;
 use \Elementor\Repeater;
 use \Elementor\Utils;
 use \Elementor\Widget_Base;
+use \Elementor\Icons_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // If this file is called directly, abort.
 
 /**
- * EduBlink Core
+ * rivet Core
  *
  * Elementor widget for testimonial.
  *
@@ -111,6 +112,19 @@ class Testimonial extends Widget_Base {
         $repeater = new Repeater();
 
         $repeater->add_control(
+            'active',
+            [
+                'label'        => __( 'Active', 'rivet-core' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => __( 'Enable', 'rivet-core' ),
+                'label_off'    => __( 'Disable', 'rivet-core' ),
+                'default'      => 'no',
+                'return_value' => 'yes',
+                'description'  => __( 'Only applicable for style 7', 'rivet-core' )
+            ]
+        );
+
+        $repeater->add_control(
             'name', 
             [
                 'label'       => __( 'Name', 'rivet-core' ),
@@ -147,7 +161,8 @@ class Testimonial extends Widget_Base {
                 'type'        => Controls_Manager::MEDIA,
                 'default'     => [
                     'url'     => Utils::get_placeholder_image_src()
-                ]
+                ],
+                'description' => __( 'Not Applicable for Style 5.', 'rivet-core' )
             ]
         );
 
@@ -157,19 +172,53 @@ class Testimonial extends Widget_Base {
                 'label'       => __( 'Rating', 'rivet-core' ),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => 5,
-                'options'     => $rating_number
+                'options'     => $rating_number,
+                'description' => __( 'Not Applicable for Style 6.', 'rivet-core' )
             ]
         );
 
         $repeater->add_control(
-            'logo', 
+            'logo_image_or_icon',
             [
-                'label'       => __( 'Brand Logo', 'rivet-core' ),
+                'label'     => __( 'Logo Image/Icon', 'rivet-core' ),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'icon',
+                'description' => __( 'Applicable for Style 2, 3, 6, 7, 11.', 'rivet-core' ),
+                'options'   => [
+                    'image' => __( 'Image', 'rivet-core' ),
+                    'icon'  => __( 'Icon', 'rivet-core' )
+                ]
+            ]
+        );
+
+        $repeater->add_control(
+            'logo_thumb', 
+            [
+                'label'       => __( 'Logo Image', 'rivet-core' ),
                 'type'        => Controls_Manager::MEDIA,
                 'default'     => [
                     'url'     => Utils::get_placeholder_image_src()
                 ],
-                'description' => __( 'Not Applicable for Style 1', 'rivet-core' )
+                'description' => __( 'Applicable for Style 2, 3, 6, 7, 11.', 'rivet-core' ),
+                'condition'   => [
+                    'logo_image_or_icon' => 'image'
+                ]
+            ]
+        );
+
+        $repeater->add_control(
+            'logo_icon', 
+            [
+                'label'       => __( 'Logo Icon', 'rivet-core' ),
+                'type'        => Controls_Manager::ICONS,
+                'default'     => [
+                    'value'   => 'fas fa-quote-right',
+                    'library' => 'fa-solid'
+                ],
+                'description' => __( 'Applicable for Style 2, 3, 6, 7, 11.', 'rivet-core' ),
+                'condition'   => [
+                    'logo_image_or_icon' => 'icon'
+                ]
             ]
         );
 
@@ -202,36 +251,19 @@ class Testimonial extends Widget_Base {
                 'type'    => Controls_Manager::SELECT,
                 'default' => '1',
                 'options' => [
-                    '1'       => __( 'Style 1', 'rivet-core' ),
-                    '2'       => __( 'Style 2', 'rivet-core' ),
-                ]
-            ]
-        );
-
-        $this->add_control(
-            'pre_heading_icon',
-            [
-                'label' => esc_html__( 'Pre Heading Icon', 'textdomain' ),
-                'type' => \Elementor\Controls_Manager::ICONS,
-                'default' => [
-                    'value' => 'fas fa-trophy',
-                    'library' => 'fa-solid',
-                ],
-                'condition' => [
-                    'style' => '1'
-                ]
-            ]
-        );
-
-        $this->add_control(
-            'pre_heading',
-            [
-                'label'       => __( 'Pre Heading', 'rivet-core' ),
-                'type'        => Controls_Manager::TEXT,
-                'label_block' => true,
-                'default'     => __( 'TESTIMONIALS' , 'rivet-core' ),
-                'condition' => [
-                    'style' => '1'
+                    '1' => __( 'Style 1', 'rivet-core' ),
+                    '2' => __( 'Style 2', 'rivet-core' ),
+                    '3' => __( 'Style 3', 'rivet-core' ),
+                    '4' => __( 'Style 4', 'rivet-core' ),
+                    '5' => __( 'Style 5', 'rivet-core' ),
+                    '6' => __( 'Style 6', 'rivet-core' ),
+                    '7' => __( 'Style 7', 'rivet-core' ),
+                    '8' => __( 'Style 8', 'rivet-core' ),
+                    '9' => __( 'Style 9', 'rivet-core' ),
+                    '10' => __( 'Style 10', 'rivet-core' ),
+                    '11' => __( 'Style 11', 'rivet-core' ),
+                    '12' => __( 'Style 12', 'rivet-core' ),
+                    '13' => __( 'Style 13', 'rivet-core' ),
                 ]
             ]
         );
@@ -239,24 +271,25 @@ class Testimonial extends Widget_Base {
         $this->add_control(
             'heading',
             [
-                'label'       => __( 'Heading', 'rivet-core' ),
-                'type'        => Controls_Manager::TEXTAREA,
+                'label'       => esc_html__( 'Heading', 'rivet-core' ),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'default'     => esc_html__( 'Quality Service Make You Happy', 'rivet-core' ),
+                'placeholder' => esc_html__( 'Write text here..', 'rivet-core' ),
                 'label_block' => true,
-                'default'     => __( 'What Our Students Say' , 'rivet-core' ),
-                'condition' => [
-                    'style' => '1'
+                'condition'   => [
+                    'style' => '8'
                 ]
             ]
         );
 
         $this->add_control(
-            'sub_heading',
+            'reviewer_thumb_label',
             [
-                'label'   => __( 'Sub Heading', 'rivet-core' ),
-                'type'    => Controls_Manager::WYSIWYG,
-                'default' => __( 'Lorem ipsum dolor sit amet consectur adipiscing elit sed eiusmod tempor incididunt labore dolore magna aliquaenim ad minim.' , 'rivet-core' ),
+                'label' => __( 'Reviewer Image Resolution', 'rivet-core' ),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
                 'condition' => [
-                    'style' => '1'
+                    'style!' => '5'
                 ]
             ]
         );
@@ -265,58 +298,135 @@ class Testimonial extends Widget_Base {
             Group_Control_Image_Size::get_type(),
             [
                 'name'    => 'thumb_size',
-                'default' => 'thumbnail'
+                'default' => 'thumbnail',
+                'condition' => [
+                    'style!' => '5'
+                ]
             ]
         );
 
-        // $this->add_control(
-        //     'autoplay',
-        //     [
-        //         'label'        => __( 'Autoplay', 'rivet-core' ),
-        //         'type'         => Controls_Manager::SWITCHER,
-        //         'label_on'     => __( 'Enable', 'rivet-core' ),
-        //         'label_off'    => __( 'Disable', 'rivet-core' ),
-        //         'default'      => 'yes',
-        //         'return_value' => 'yes',
-        //     ]
-        // );
+        $this->add_control(
+            'logo_thumb_label',
+            [
+                'label' => __( 'Logo Image Resolution', 'rivet-core' ),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [
+                    'style' => [ '2', '3', '6', '7', '10', '11' ]
+                ]
+            ]
+        );
 
-        // $this->add_control(
-        //     'autoplay_speed',
-        //     [
-        //         'label'        => __( 'Autoplay Speed', 'rivet-core' ),
-        //         'type'         => Controls_Manager::NUMBER,
-        //         'placeholder'  => 3000,
-        //         'condition'    => [
-        //             'autoplay' => 'yes'
-        //         ],
-        //         'description'  => __( 'Speed in milliseconds. Example value: 3000', 'rivet-core' )
-        //     ]
-        // );
+        $this->add_group_control(
+            Group_Control_Image_Size::get_type(),
+            [
+                'name'    => 'logo_thumb_size',
+                'default' => 'thumbnail',
+                'description' => __( 'Applicable for this style.', 'rivet-core' ),
+                'condition' => [
+                    'style' => [ '2', '3', '6', '7', '10', '11' ]
+                ]
+            ]
+        );
 
         $this->add_control(
-            'navigation',
+            'shadow_overly',
             [
-                'label'        => __( 'Navigation', 'rivet-core' ),
+                'label'        => __( 'Shadow Overly', 'rivet-core' ),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => __( 'Enable', 'rivet-core' ),
                 'label_off'    => __( 'Disable', 'rivet-core' ),
                 'default'      => 'yes',
                 'return_value' => 'yes',
+                'condition'    => [
+                    'style' => '2'
+                ]
             ]
         );
 
-        // $this->add_control(
-        //     'pagination',
-        //     [
-        //         'label'        => __( 'Pagination', 'rivet-core' ),
-        //         'type'         => Controls_Manager::SWITCHER,
-        //         'label_on'     => __( 'Enable', 'rivet-core' ),
-        //         'label_off'    => __( 'Disable', 'rivet-core' ),
-        //         'default'      => 'yes',
-        //         'return_value' => 'yes',
-        //     ]
-        // );
+        $this->end_controls_section();
+
+        // box style
+        $this->start_controls_section(
+            'box_style',
+            [
+                'label' => esc_html__( 'Box Style', 'rivet-core' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'style' => [ '2', '10' ]
+                ]
+            ]
+        );
+        
+        $this->add_group_control(
+            \Elementor\Group_Control_Background::get_type(),
+            [
+                'name'     => 'box_bg',
+                'label'   => esc_html__( 'Background', 'rivet-core' ),
+                'types'    => [ 'classic', 'gradient' ],
+                'selector' => '{{WRAPPER}} .rivet-testimonial-card',
+            ]
+        );
+
+        $this->add_control(
+            'box_active_bg_color',
+            [
+                'label'       => esc_html__( 'Active Box Background Color', 'rivet-core' ),
+                'type'     => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rivet-testimonial-style-2 .swiper-slide-active .rivet-testimonial-card' => 'background-color: {{VALUE}}',
+                ],
+                'condition' => [
+                    'style' => '2'
+                ]
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'box_border',
+                'label'    => esc_html__( 'Border', 'rivet-core' ),
+                'selector' => '{{WRAPPER}} .rivet-testimonial-card',
+            ]
+        );
+
+        $this->add_control(
+            'box_border_radius',
+            [
+                'label'      => esc_html__( 'Border Radius', 'rivet-core' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors'  => [
+                '{{WRAPPER}} .rivet-testimonial-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+         );
+        
+        $this->end_controls_section();
+
+        // qotation background
+        $this->start_controls_section(
+            'quote_style',
+            [
+                'label' => esc_html__( 'Qotation', 'rivet-core' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'style' => '6'
+                ]
+            ]
+        );
+        
+        $this->add_control(
+            'quote_bg_color',
+            [
+                'label'       => esc_html__( 'Background Color', 'rivet-core' ),
+                'type'     => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .qotation' => 'background-color: {{VALUE}}',
+                ],
+            ]
+        );
         
         $this->end_controls_section();
 
@@ -331,12 +441,12 @@ class Testimonial extends Widget_Base {
      *
      * @param int $ratings Rating value.
      */
-    protected function rating( $ratings ) {
+    protected function rating( $ratings, $name = 'star' ) {
         for ( $i = 1; $i <= 5; $i++ ) :
             if ( $ratings >= $i ) :
-                $active_class = '<span><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/star.svg' ) . '" alt="' . esc_attr__( 'star', 'rivet-core' ) . '"></span>';
+                $active_class = '<span><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/' . $name .  '.svg' ) . '" alt="' . esc_attr__( 'star', 'rivet-core' ) . '"></span>';
             else :
-                $active_class = '<span class="deactive"><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/star.svg' ) . '" alt="' . esc_attr__( 'star', 'rivet-core' ) . '"></span>';
+                $active_class = '<span class="deactive"><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/' . $name .  '.svg' ) . '" alt="' . esc_attr__( 'star', 'rivet-core' ) . '"></span>';
             endif;
             echo $active_class;
         endfor;
@@ -360,127 +470,100 @@ class Testimonial extends Widget_Base {
         $this->add_render_attribute( 'container', 'class', 'swiper swiper-container swiper-container-initialized' );
         $this->add_render_attribute( 'swiper', 'class', $sliderWrapper );
 
-        if( '1' == $settings['style'] ) :
-            $this->add_render_attribute( 'wrapper', 'class', 'bg-primary-color' );
-        endif;
+        if( '2' === $settings['style'] && 'yes' == $settings['shadow_overly'] ) :
+            $this->add_render_attribute( 'wrapper', 'class', 'rivet-testimonial-2__bg' );
+        endif; 
 
         echo '<div ' . $this->get_render_attribute_string( 'wrapper' ) . '>';
-            if( '1' == $settings['style'] ) :
-                echo '<div class="rivet-row align-items-end">';
-                    echo '<div class="rivet-col-lg-8">';
-                        echo '<div class="rivet-section rivet-mb-50" data-sal-delay="100" data-sal="slide-up" data-sal-duration="800">';
-                            if( !empty( $settings['pre_heading'] ) ) : 
-                            echo '<span class="rivet-section__subtitle-white">';
-                                \Elementor\Icons_Manager::render_icon( $settings[ 'pre_heading_icon' ], [ 'aria-hidden' => 'true', 'class' => 'rivet-mr-5' ] );
-                                echo esc_html( $settings['pre_heading'] );
-                            echo '</span>';
-                            endif;
-                            if ( !empty( $settings['heading'] ) ) :
-                            echo '<h3 class="rivet-section__title-white">' . wp_kses_post( $settings['heading'] ) . '</h3>';
-                            endif; 
-                            if ( ! empty( $settings['sub_heading'] ) ) :
-                            echo '<p class="rivet-section__sub-title-white">' . wp_kses_post( $settings['sub_heading']) . '</p>';
-                            endif;
-                        echo '</div>';
-                    echo '</div>';
-                    echo '<div class="rivet-col-lg-4">';
-                        if( 'yes' == $settings['navigation'] ) :
-                        echo '<div class="rivet-testimonial__arrow rivet-mb-70">';
-                            echo '<div class="rivet-testimonial__prev rivet-arrow-round">';
-                                echo '<span><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/prev-arrow.svg' ) . '" alt=""></span>';
-                            echo '</div>';
-                            echo '<div class="rivet-testimonial__next rivet-arrow-round rivet-ml-15">';
-                                echo '<span><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/next-arrow.svg' ) . '" alt=""></span>';
-                            echo '</div>';
-                        echo '</div>';
-                        endif;
-                    echo '</div>';
-                echo '</div>';
-                
-                echo '<div class="rivet-row">';
-                    echo '<div class="rivet-col-12">';
 
-                        echo '<div class="rivet-testimonial__wrapper">';
-                            echo '<div ' . $this->get_render_attribute_string( 'container' ) . '>';
-                                echo '<div ' . $this->get_render_attribute_string( 'swiper' ) . '>';
-                
-                                    foreach( $settings['testimonials'] as $key => $testimonial ) :
-                                        $image         = $testimonial['thumb'];
-                                        $image_src_url = Group_Control_Image_Size::get_attachment_image_src( $image['id'], 'thumb_size', $settings );
+            if( '13' == $settings['style'] ) :
+            echo '<div class="rivet-testimonial-15__wrap">';
+                foreach( $settings['testimonials'] as $key => $testimonial ) : 
+                    $image         = $testimonial['thumb'];
+                    $image_src_url = Group_Control_Image_Size::get_attachment_image_src( $image['id'], 'thumb_size', $settings );
 
-                                        if ( empty( $image_src_url ) ) :
-                                            $image_url = $image['url']; 
-                                        else :
-                                            $image_url = $image_src_url;
-                                        endif;
-                                    echo '<div class="swiper-slide">';
-                                        echo '<div class="rivet-testimonial__item">';
-                                            echo '<div class="rivet-testimonial__icon">';
-                                                $this->rating( $testimonial['rating'] );
-                                            echo '</div>';
-                                            if( !empty( $testimonial['testimonial'] ) ) : 
-                                            echo '<div class="rivet-testimonial__content">';
-                                                echo '<p>“' . wp_kses_post( $testimonial['testimonial'] ) . '“</p>';
-                                            echo '</div>';
-                                            endif;
-                                            echo '<div class="rivet-testimonial__avater">';
-                                                if ( ! empty( $image_url ) ) :
-                                                echo '<div class="rivet-testimonial__avater-thumb">';
-                                                    echo '<img src="' . esc_url( $image_url ) . '" class="testimonial-author-avatar" alt="' . Control_Media::get_image_alt( $testimonial['thumb'] ) . '">';
-                                                echo '</div>';
-                                                endif;
-                                                echo '<div class="rivet-testimonial__avater-text">';
-                                                    echo $testimonial['name'] ? '<h4 class="rivet-testimonial__avater-title">' . esc_html( $testimonial['name'] ) . '</h4>' : '';
-                                                    echo $testimonial['designation'] ? '<span>' . esc_html( $testimonial['designation'] ) . '</span>' : '';
-                                                echo '</div>';
-                                            echo '</div>';
-                                        echo '</div>';
-                                    echo '</div>';
-                                    endforeach;
-                
-                                echo '</div>';
-                            echo '</div>';
-                        echo '</div>';
-
-                    echo '</div>';
-                echo '</div>';
+                    if ( empty( $image_src_url ) ) :
+                        $image_url = $image['url']; 
+                    else :
+                        $image_url = $image_src_url;
+                    endif;
+                    include RIVET_PLUGIN_DIR . 'widgets/styles/testimonials/testimonial-13.php';
+                endforeach;
+            echo '<div>';
             else :
-                echo '<div ' . $this->get_render_attribute_string( 'container' ) . '>';
-                    echo '<div ' . $this->get_render_attribute_string( 'swiper' ) . '>';
-                        foreach( $settings['testimonials'] as $key => $testimonial ) : 
-                            $image         = $testimonial['thumb'];
-                            $image_src_url = Group_Control_Image_Size::get_attachment_image_src( $image['id'], 'thumb_size', $settings );
+            echo '<div ' . $this->get_render_attribute_string( 'container' ) . '>';
+                echo '<div ' . $this->get_render_attribute_string( 'swiper' ) . '>';
+                    foreach( $settings['testimonials'] as $key => $testimonial ) : 
+                        $image         = $testimonial['thumb'];
+                        $image_src_url = Group_Control_Image_Size::get_attachment_image_src( $image['id'], 'thumb_size', $settings );
 
-                            if ( empty( $image_src_url ) ) :
-                                $image_url = $image['url']; 
-                            else :
-                                $image_url = $image_src_url;
-                            endif;
+                        if ( empty( $image_src_url ) ) :
+                            $image_url = $image['url']; 
+                        else :
+                            $image_url = $image_src_url;
+                        endif;
 
-                            $each_item = $this->get_repeater_setting_key('title', 'testimonials', $key);
-                            $item_class = ['rivet-testimonial-item'];
-                            $this->add_render_attribute( $each_item, 'class', $item_class );
-                            $this->add_render_attribute( $each_item, 'class', 'elementor-repeater-item-'. esc_attr( $testimonial['_id'] ) );
-                            echo '<div class="' . esc_attr( $sliderItem ) . '">';
-                                echo '<div ' . $this->get_render_attribute_string( $each_item ) . '>';
-                                    include RIVET_PLUGIN_DIR . 'widgets/styles/testimonials/testimonial-' . $settings['style'] . '.php';
-                                echo '</div>';
+                        $each_item = $this->get_repeater_setting_key('title', 'testimonials', $key);
+                        $item_class = ['rivet-testimonial-item'];
+                        $this->add_render_attribute( $each_item, 'class', $item_class );
+                        $this->add_render_attribute( $each_item, 'class', 'elementor-repeater-item-'. esc_attr( $testimonial['_id'] ) );
+                        echo '<div class="' . esc_attr( $sliderItem ) . '">';
+                            echo '<div ' . $this->get_render_attribute_string( $each_item ) . '>';
+                                include RIVET_PLUGIN_DIR . 'widgets/styles/testimonials/testimonial-' . $settings['style'] . '.php';
                             echo '</div>';
-                        endforeach;
-                    echo '</div>';
+                        echo '</div>';
+                    endforeach;
                 echo '</div>';
-
-                if( '2' == $settings['style'] ) :
-                echo '<div class="rivet-testimonial-2__arrow rivet-mt-60">';
-                    echo '<div class="rivet-testimonial-2__prev rivet-arrow-dark round">';
-                        echo '<span><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/arrow-long-left.svg' ) . '" alt=""></span>';
-                    echo '</div>';
-                    echo '<div class="rivet-testimonial-2__next rivet-arrow-dark round">';
-                        echo '<span><img class="svgInject" src="' . esc_url( get_template_directory_uri() . '/assets/img/icon/arrow-long-right.svg' ) . '" alt=""></span>';
-                    echo '</div>';
-                echo '</div>';
-                endif; 
+            echo '</div>';
             endif;
+
         echo '</div>';
+    }
+
+    /**
+     * Print icon or image
+     *
+     * @param array $settings
+     * @param bool  $div
+     * @param string $div_class
+     * @param bool  $span
+     * @param string $span_class
+     */
+    private function logo_print( $settings, $div = true, $div_class = '', $span = true, $span_class = '' ) {
+        $div_class;
+        $span_class;
+
+        if( !empty( $div_class ) ) : 
+        $this->add_render_attribute( 'div_class', [ 'class' => esc_attr( $div_class ) ] );
+        endif;
+
+        if( !empty( $span_class ) ) : 
+        $this->add_render_attribute( 'span_class', [ 'class' => esc_attr( $span_class ) ] );
+        endif;
+
+        if ( 'image' === $settings['logo_image_or_icon'] ) :
+            $image         = $settings['logo_thumb'];
+            $image_src_url = Group_Control_Image_Size::get_attachment_image_src( $image['id'], 'logo_thumb_size', $settings );
+            if ( empty( $image_src_url ) ) :
+                $image_url = $image['url']; 
+            else :
+                $image_url = $image_src_url;
+            endif;
+            if( !empty( $image_url ) ) : 
+            echo $div == true ? '<div ' . $this->get_render_attribute_string( 'div_class' ) . '>' : '';
+                echo $span == true ? '<span ' . $this->get_render_attribute_string( 'span_class' ) . '>' : '';
+                    echo '<img src="' . esc_url( $image_url ) . '" alt="' . Control_Media::get_image_alt( $settings['thumb'] ) . '">';
+                echo $span == true ? '</span>' : '';
+            echo $div == true ? '</div>' : '';
+            endif; 
+        else :
+            if( !empty( $settings['logo_icon']['value'] ) ) : 
+            echo $div == true ? '<div ' . $this->get_render_attribute_string( 'div_class' ) . '>' : '';
+                echo $span == true ? '<span ' . $this->get_render_attribute_string( 'span_class' ) . '>' : '';
+                    Icons_Manager::render_icon( $settings['logo_icon'], [ 'aria-hidden' => 'true' ] );
+                echo $span == true ? '</span>' : '';
+            echo $div == true ? '</div>' : '';
+            endif;
+        endif;
     }
 }
